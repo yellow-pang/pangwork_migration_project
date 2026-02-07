@@ -6,7 +6,7 @@ import { apiClient, getOAuth2LoginUrl } from '../lib/api'
 const router = useRouter()
 const statusLabel = ref('Checking session')
 const statusTone = ref<'ok' | 'fail' | 'idle'>('idle')
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8076'
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
 
 const checkSession = async () => {
   try {
