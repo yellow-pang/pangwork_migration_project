@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pangworkout.Mapper.UserMapper">
+    <!-- 유저 조회 -->
+    <select id="selectUsers" resultType="com.pangworkout.DTO.Users">
+        SELECT * FROM USER
+    </select>
+
+    <select id="selectUser" resultType="com.pangworkout.DTO.Users">
+        SELECT * 
+        FROM USER
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <insert id="insertUser">
+        INSERT INTO 
+            USER 
+        (
+            USER_ID, NICKNAME
+        )
+        VALUES (
+            #{userId}, #{nickName}
+        )
+    </insert>
+
+    <update id="updateLoginDate">
+        UPDATE user
+        SET LOGIN_DATE = CURRENT_TIMESTAMP
+        WHERE user_id = #{userId}
+    </update>
+
+</mapper>
