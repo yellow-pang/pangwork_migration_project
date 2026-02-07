@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pangworkout.Mapper.ListMapper">
+
+    <select id="selectMainWorkout" parameterType="map" resultType="MainWorkout">
+        select
+            WORK_ID,
+            WORK_NAME
+        from
+            pangwork.`work` w
+        where
+            w.USER_ID = #{params.userId}
+        order by w.WORK_NAME ASC
+    </select>
+
+    <select id="selectListCount" parameterType="map" resultType="int">
+        select count(*)
+            from(
+            select 
+                wd.WORK_DETAIL_ID
+                ,wd.WORK_SET_ID
+                ,wd.WORK_DETAIL_NAME
+                ,wd.WORK_ID
+                ,wd.CREATE_DATE
+                ,wd.EDIT_DATE
+                ,w.WORK_NAME
+            from
+                pangwork.work_detail wd join pangwork.`work` w on w.WORK_ID = wd.WORK_ID
+            where
+                WORK_DETAIL_CATEGORY  = 'B'
+                AND w.USER_ID = #{params.userId}
+                <if test="params.workId != null and params.workId != ''">
+                    AND w.WORK_ID = #{params.workId}
+                </if>
+            group by WORK_ID,DATE(wd.CREATE_DATE)
+            order by wd.CREATE_DATE desc
+        ) A
+    </select>
+
+    <select id="selectLists" parameterType="map" resultType="DetailWorkout">
+        select 
+            wd.WORK_DETAIL_ID
+            ,wd.WORK_SET_ID
+            ,wd.WORK_DETAIL_NAME
+            ,wd.WORK_ID
+            ,wd.CREATE_DATE
+            ,wd.EDIT_DATE
+            ,w.WORK_NAME
+        from
+            pangwork.work_detail wd join pangwork.`work` w on w.WORK_ID = wd.WORK_ID
+        where
+            WORK_DETAIL_CATEGORY  = 'B'
+            AND w.USER_ID = #{params.userId}
+            <if test="params.workId != null and params.workId != ''">
+                AND w.WORK_ID = #{params.workId}
+            </if>
+        group by WORK_ID,DATE(wd.CREATE_DATE)
+        order by wd.CREATE_DATE desc
+        limit #{params.limit}
+        offset #{params.offset}
+    </select>
+
+    <select id="selectLists2" parameterType="map" resultType="DetailWorkout">
+        SELECT D.* 
+            FROM PANGWORK.WORK_DETAIL D
+        JOIN (
+            SELECT WORK_ID, WORK_SET_ID
+            FROM PANGWORK.WORK_DETAIL a
+            WHERE WORK_DETAIL_ID = #{params.workDetailId}
+            and a.WORK_ID =(
+                            select WORK_ID
+                            from PANGWORK.work b
+                            where  b.WORK_ID =a.WORK_ID
+                            and b.USER_ID =#{params.userId}
+                        )
+        ) A
+        ON D.WORK_ID = A.WORK_ID
+        AND D.WORK_SET_ID = A.WORK_SET_ID;
+    </select>
+
+</mapper>
