@@ -15,10 +15,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
     // 생성자에서 JwtTokenProvider를 주입받음
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
+    public SecurityConfig(
+            JwtTokenProvider jwtTokenProvider,
+            CustomOAuth2UserService customOAuth2UserService,
+            OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler
+    ) {
         this.jwtTokenProvider = jwtTokenProvider;
+        this.customOAuth2UserService = customOAuth2UserService;
+        this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
     }
 
     // 시큐리티 필터 체인 설정
@@ -29,8 +37,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                             "/login"
-                            ,"/naverlogin"
-                            ,"/navercallback"
+                        ,"/oauth2/**"
+                        ,"/login/oauth2/**"
+                        ,"/auth/consent"
                             ,"/images/**"
                             ,"/css/**"
                             ,"/js/**"
@@ -39,9 +48,12 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest().authenticated() // 그 외 요청은 인증 필요
                 )
-                .formLogin(form -> form
-                .loginPage("/login") // 커스텀 로그인 페이지를 "/login"로 사용
-                .permitAll()
+                .oauth2Login(oauth2 -> oauth2
+                    .loginPage("/login")
+                    .userInfoEndpoint(userInfo -> userInfo
+                        .userService(customOAuth2UserService)
+                    )
+                    .successHandler(oAuth2AuthenticationSuccessHandler)
                 )
                 // .exceptionHandling(exception -> exception
                 //     .authenticationEntryPoint((request, response, authException) ->
