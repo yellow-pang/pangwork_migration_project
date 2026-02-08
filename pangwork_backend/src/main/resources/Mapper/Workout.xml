@@ -3,106 +3,106 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.pangworkout.Mapper.WorkoutsMapper">
+<mapper namespace="com.example.pangwork_backend.Mapper.WorkoutsMapper">
 
     <select id="selectMainWorkouts" parameterType="map" resultType="MainWorkout">
         SELECT
-            WORK_ID
-            ,WORK_NAME
-            ,USER_ID
-            ,CREATE_DATE
-            ,EDIT_DATE
+            "WORK_ID"
+            ,"WORK_NAME"
+            ,"USER_ID"
+            ,"CREATE_DATE"
+            ,"EDIT_DATE"
         FROM 
-            PANGWORK.WORK
+            "work"
         WHERE
-            USER_ID = #{params.userId}
+            "USER_ID" = #{params.userId}
     </select>
 
     <select id="selectDetailWorkout" parameterType="map" resultType="DetailWorkout">
         (SELECT 
-            WORK_ID
-            ,"" AS WORK_NAME
-            ,WORK_DETAIL_ID
-            ,WORK_DETAIL_NAME
-            ,WORK_SET_ID
-            ,WORK_DETAIL_COUNT
-            ,WORK_DETAIL_CATEGORY
-            ,CREATE_DATE
-            ,EDIT_DATE
-            ,MEMO
+            "WORK_ID"
+            ,'' AS "WORK_NAME"
+            ,"WORK_DETAIL_ID"
+            ,"WORK_DETAIL_NAME"
+            ,"WORK_SET_ID"
+            ,"WORK_DETAIL_COUNT"
+            ,"WORK_DETAIL_CATEGORY"
+            ,"CREATE_DATE"
+            ,"EDIT_DATE"
+            ,"MEMO"
         FROM 
-            PANGWORK.WORK_DETAIL
+            "work_detail"
         WHERE 
-            WORK_ID =(
-                    select WORK_ID
-                    from PANGWORK.WORK
-                    where user_id = #{params.userId}
-                    and WORK_ID =#{params.workId}
+            "WORK_ID" =(
+                    select "WORK_ID"
+                    from "work"
+                    where "USER_ID" = #{params.userId}
+                    and "WORK_ID" =#{params.workId}
                 )
-            AND CREATE_DATE &gt;= NOW() - INTERVAL 8 HOUR
-        ORDER BY WORK_DETAIL_ID  desc
+            AND "CREATE_DATE" &gt;= NOW() - INTERVAL '8 hours'
+        ORDER BY "WORK_DETAIL_ID" desc
         )
         UNION ALL
         (
         SELECT 
-            WORK_ID
-            , (select WORK_NAME from PANGWORK.work where WORK_ID =#{params.workId}) as WORK_NAME
-            ,WORK_DETAIL_ID
-            ,WORK_DETAIL_NAME
-            ,WORK_SET_ID
-            ,WORK_DETAIL_COUNT
-            ,'L' AS WORK_DETAIL_CATEGORY
-            ,CREATE_DATE
-            ,EDIT_DATE
-            ,MEMO
+            "WORK_ID"
+            , (select "WORK_NAME" from "work" where "WORK_ID" =#{params.workId}) as "WORK_NAME"
+            ,"WORK_DETAIL_ID"
+            ,"WORK_DETAIL_NAME"
+            ,"WORK_SET_ID"
+            ,"WORK_DETAIL_COUNT"
+            ,'L' AS "WORK_DETAIL_CATEGORY"
+            ,"CREATE_DATE"
+            ,"EDIT_DATE"
+            ,"MEMO"
         FROM 
-            PANGWORK.WORK_DETAIL
+            "work_detail"
         WHERE 
-            WORK_ID =(
-                    select WORK_ID
-                    from PANGWORK.WORK 
-                    where user_id = #{params.userId}
-                    and WORK_ID =#{params.workId}
+            "WORK_ID" =(
+                    select "WORK_ID"
+                    from "work" 
+                    where "USER_ID" = #{params.userId}
+                    and "WORK_ID" =#{params.workId}
                     )
         <!-- 오늘 이전의 다음 목표 카테고리 데이터가 저번에 설정한 목표임 -->
-            AND WORK_DETAIL_CATEGORY ='N'
-            AND WORK_SET_ID = (
-                SELECT WORK_SET_ID
-                FROM PANGWORK.WORK_DETAIL
-                WHERE CREATE_DATE  &lt; NOW() - INTERVAL 8 HOUR
-                    and WORK_ID =#{params.workId}
-                ORDER BY WORK_SET_ID DESC
+            AND "WORK_DETAIL_CATEGORY" ='N'
+            AND "WORK_SET_ID" = (
+                SELECT "WORK_SET_ID"
+                FROM "work_detail"
+                WHERE "CREATE_DATE"  &lt; NOW() - INTERVAL '8 hours'
+                    and "WORK_ID" =#{params.workId}
+                ORDER BY "WORK_SET_ID" DESC
                 LIMIT 1
             )
             <!--and CREATE_DATE &lt; NOW() - INTERVAL 8 HOUR -->
-        ORDER BY CREATE_DATE desc
+        ORDER BY "CREATE_DATE" desc
         <!--imit 1 -->
         )
     </select>
 
     <update id="updateDetailWorkout" parameterType="DetailWorkout">
             UPDATE
-                PANGWORK.WORK_DETAIL
+                "work_detail"
             SET 
-                WORK_DETAIL_NAME = #{workDetailName}
-                ,WORK_DETAIL_COUNT = #{workDetailCount}
-                ,WORK_DETAIL_CATEGORY = #{workDetailCategory}
-                ,MEMO = #{memo}
+                "WORK_DETAIL_NAME" = #{workDetailName}
+                ,"WORK_DETAIL_COUNT" = #{workDetailCount}
+                ,"WORK_DETAIL_CATEGORY" = #{workDetailCategory}
+                ,"MEMO" = #{memo}
             WHERE 
-                WORK_DETAIL_ID = #{workDetailId}
-                AND WORK_ID = #{workId}
+                "WORK_DETAIL_ID" = #{workDetailId}
+                AND "WORK_ID" = #{workId}
     </update>
 
     <insert id="insertDetailWorkout">
         INSERT INTO
-            PANGWORK.WORK_DETAIL
+            "work_detail"
                 (
-                    WORK_SET_ID
-                    ,WORK_DETAIL_NAME
-                    ,WORK_DETAIL_COUNT
-                    ,WORK_ID
-                    ,WORK_DETAIL_CATEGORY
-                    ,MEMO
+                    "WORK_SET_ID"
+                    ,"WORK_DETAIL_NAME"
+                    ,"WORK_DETAIL_COUNT"
+                    ,"WORK_ID"
+                    ,"WORK_DETAIL_CATEGORY"
+                    ,"MEMO"
                 )
         VALUES
         <foreach collection="params" item="work" separator=",">

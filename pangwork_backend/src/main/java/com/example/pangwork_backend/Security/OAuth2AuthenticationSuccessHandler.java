@@ -1,6 +1,8 @@
 package com.example.pangwork_backend.Security;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -24,6 +26,9 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
     @Value("${app.frontend.redirect-url:/}")
     private String frontendRedirectUrl;
+
+    @Value("${app.frontend.consent-url:/consent}")
+    private String frontendConsentUrl;
 
     public OAuth2AuthenticationSuccessHandler(
             JwtTokenProvider jwtTokenProvider,
@@ -54,7 +59,10 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
         Users proceedUser = userService.getUser(tempUser);
         if (proceedUser == null || proceedUser.getUserId() == null || proceedUser.getUserId().isBlank()) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User registration failed");
+            String encodedId = URLEncoder.encode(naverUserId, StandardCharsets.UTF_8);
+            String encodedNickname = URLEncoder.encode(naverNickname == null ? "" : naverNickname, StandardCharsets.UTF_8);
+            String redirectUrl = frontendConsentUrl + "?userId=" + encodedId + "&nickName=" + encodedNickname;
+            response.sendRedirect(redirectUrl);
             return;
         }
 
