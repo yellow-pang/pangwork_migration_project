@@ -39,7 +39,7 @@ public class SecurityConfig {
                             "/login"
                         ,"/oauth2/**"
                         ,"/login/oauth2/**"
-                        ,"/auth/consent"
+                        ,"/api/auth/consent"
                             ,"/images/**"
                             ,"/css/**"
                             ,"/js/**"

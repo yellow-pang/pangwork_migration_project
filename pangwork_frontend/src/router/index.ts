@@ -19,6 +19,11 @@ const router = createRouter({
       name: 'consent',
       component: () => import('../views/ConsentView.vue'),
     },
+    {
+      path: '/workouts',
+      name: 'workouts',
+      component: () => import('../views/WorkoutsView.vue'),
+    },
   ],
 })
 

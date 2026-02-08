@@ -26,8 +26,8 @@ const submitConsent = async () => {
       userId: userId.value,
       nickName: nickName.value,
     })
-    statusMessage.value = '등록 완료! 홈으로 이동합니다.'
-    router.push('/')
+    statusMessage.value = '등록 완료! 운동 페이지로 이동합니다.'
+    router.push('/workouts')
   } catch (error) {
     statusMessage.value = '등록에 실패했습니다. 잠시 후 다시 시도해주세요.'
   } finally {

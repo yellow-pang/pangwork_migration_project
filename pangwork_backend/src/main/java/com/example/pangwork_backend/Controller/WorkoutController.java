@@ -22,7 +22,7 @@ import com.example.pangwork_backend.Service.WorkoutService;
  * 운동 관련 컨트롤러
  */
 @Controller
-@RequestMapping("/work")
+@RequestMapping("/api/work")
 public class WorkoutController {
 
     private final WorkoutService workoutService;

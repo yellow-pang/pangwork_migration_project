@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.pangwork_backend.Service.ListService;
 
 @Controller
-@RequestMapping("/list")
+@RequestMapping("/api/list")
 public class ListController {
 
     private final ListService listService;
