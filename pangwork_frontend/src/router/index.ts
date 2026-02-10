@@ -24,6 +24,11 @@ const router = createRouter({
       name: 'workouts',
       component: () => import('../views/WorkoutsView.vue'),
     },
+    {
+      path: '/workouts/:workId',
+      name: 'workout-detail',
+      component: () => import('../views/WorkoutDetailView.vue'),
+    },
   ],
 })
 

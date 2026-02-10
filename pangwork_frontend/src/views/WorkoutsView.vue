@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import WorkoutCardList from '../components/WorkoutCardList.vue'
 import { apiClient } from '../lib/api'
 
 type WorkoutItem = {
@@ -15,6 +16,10 @@ const router = useRouter()
 const isLoading = ref(true)
 const errorMessage = ref('')
 const workouts = ref<WorkoutItem[]>([])
+
+const handleSelectWorkout = (item: WorkoutItem) => {
+  router.push(`/workouts/${item.workId}`)
+}
 
 const loadWorkouts = async () => {
   isLoading.value = true
@@ -50,16 +55,7 @@ onMounted(() => {
         {{ errorMessage }}
       </div>
 
-      <div v-else class="workout-grid">
-        <button v-for="item in workouts" :key="item.workId" class="workout-card" type="button">
-          <div class="workout-title">{{ item.workName }}</div>
-          <div class="workout-meta">ID: {{ item.workId }}</div>
-        </button>
-
-        <div v-if="workouts.length === 0" class="workout-empty">
-          등록된 운동이 없습니다. 첫 운동을 추가해보세요.
-        </div>
-      </div>
+      <WorkoutCardList v-else :items="workouts" @select="handleSelectWorkout" />
     </div>
   </section>
 </template>
