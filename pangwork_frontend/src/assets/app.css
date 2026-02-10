@@ -255,6 +255,34 @@ button {
     box-shadow 0.2s ease;
 }
 
+.workout-card:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.workout-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.workout-card-delete {
+  border: none;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #7f1d1d;
+  background: rgba(239, 68, 68, 0.12);
+  cursor: pointer;
+}
+
+.workout-card-delete:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .workout-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 18px 30px rgba(15, 23, 42, 0.12);
@@ -268,6 +296,27 @@ button {
 .workout-meta {
   color: var(--muted);
   font-size: 13px;
+}
+
+.workout-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.workout-input {
+  flex: 1;
+  min-width: 220px;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  padding: 12px 14px;
+  font-size: 14px;
+}
+
+.workout-input:focus {
+  outline: 3px solid var(--ring);
+  border-color: transparent;
 }
 
 .workout-empty {
