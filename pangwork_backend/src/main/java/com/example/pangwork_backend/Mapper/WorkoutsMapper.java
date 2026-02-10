@@ -26,5 +26,25 @@ public interface WorkoutsMapper {
 	public int updateDetailWorkout(
 		DetailWorkout detailWorkout
 	);
+
+	public MainWorkout selectWorkoutById(
+		@Param("params") Map<String, Object> params
+	);
+
+	public int selectWorkoutNameCount(
+		@Param("params") Map<String, Object> params
+	);
+
+	public int insertWorkout(
+		@Param("params") Map<String, Object> params
+	);
+
+	public int deleteWorkDetailsByWorkId(
+		@Param("params") Map<String, Object> params
+	);
+
+	public int deleteWorkout(
+		@Param("params") Map<String, Object> params
+	);
 	
 }

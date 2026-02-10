@@ -158,6 +158,57 @@ public class WorkoutController {
 
         result = workoutService.setWorkDetail(insertWorkList, updateWorkList);
 
+        return result;
+    }
+
+    @RequestMapping(value = "/addList", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> addWorkout(
+        @RequestBody Map<String, Object> params
+    ) {
+        Map<String, Object> result = new HashMap<>();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        String userId = user.getUsername();
+
+        Object workName = params.get("workName");
+        if (workName == null || String.valueOf(workName).trim().isEmpty()) {
+            result.put("status", "800");
+            result.put("error", "운동 이름이 필요합니다.");
+            result.put("data", "");
+            return result;
+        }
+
+        params.put("userId", userId);
+        params.put("workName", String.valueOf(workName).trim());
+        result = workoutService.addWorkout(params);
+
+        return result;
+    }
+
+    @RequestMapping(value = "/deleteList", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> deleteWorkout(
+        @RequestBody Map<String, Object> params
+    ) {
+        Map<String, Object> result = new HashMap<>();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        String userId = user.getUsername();
+
+        Object workId = params.get("workId");
+        if (workId == null || String.valueOf(workId).trim().isEmpty()) {
+            result.put("status", "800");
+            result.put("error", "운동 ID가 필요합니다.");
+            result.put("data", "");
+            return result;
+        }
+
+        params.put("userId", userId);
+        params.put("workId", workId);
+        result = workoutService.deleteWorkout(params);
 
         return result;
     }

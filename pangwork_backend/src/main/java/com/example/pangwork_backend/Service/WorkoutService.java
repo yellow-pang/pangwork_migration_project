@@ -18,4 +18,12 @@ public interface WorkoutService {
         List<DetailWorkout> insertList
         ,List<DetailWorkout> updateList
     );
+
+    public Map<String, Object> addWorkout(
+        Map<String, Object> params
+    );
+
+    public Map<String, Object> deleteWorkout(
+        Map<String, Object> params
+    );
 }

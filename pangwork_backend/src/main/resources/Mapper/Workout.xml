@@ -18,6 +18,30 @@
             "USER_ID" = #{params.userId}
     </select>
 
+    <select id="selectWorkoutById" parameterType="map" resultType="MainWorkout">
+        SELECT
+            "WORK_ID"
+            ,"WORK_NAME"
+            ,"USER_ID"
+            ,"CREATE_DATE"
+            ,"EDIT_DATE"
+        FROM
+            "work"
+        WHERE
+            "WORK_ID" = #{params.workId}
+            AND "USER_ID" = #{params.userId}
+    </select>
+
+    <select id="selectWorkoutNameCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM
+            "work"
+        WHERE
+            "USER_ID" = #{params.userId}
+            AND LOWER(REGEXP_REPLACE(TRIM("WORK_NAME"), '\\s+', ' ', 'g'))
+                = LOWER(REGEXP_REPLACE(TRIM(#{params.workName}), '\\s+', ' ', 'g'))
+    </select>
+
     <select id="selectDetailWorkout" parameterType="map" resultType="DetailWorkout">
         (SELECT 
             "WORK_ID"
@@ -116,5 +140,42 @@
             )
         </foreach>
     </insert>
+
+    <insert id="insertWorkout" parameterType="map">
+        <selectKey keyProperty="params.workId" resultType="int" order="AFTER">
+            SELECT currval(pg_get_serial_sequence('work','WORK_ID'))
+        </selectKey>
+        INSERT INTO
+            "work"
+                (
+                    "WORK_NAME"
+                    ,"USER_ID"
+                )
+        VALUES
+            (
+                #{params.workName}
+                ,#{params.userId}
+            )
+    </insert>
+
+    <delete id="deleteWorkDetailsByWorkId" parameterType="map">
+        DELETE FROM
+            "work_detail"
+        WHERE
+            "WORK_ID" IN (
+                SELECT "WORK_ID"
+                FROM "work"
+                WHERE "WORK_ID" = #{params.workId}
+                AND "USER_ID" = #{params.userId}
+            )
+    </delete>
+
+    <delete id="deleteWorkout" parameterType="map">
+        DELETE FROM
+            "work"
+        WHERE
+            "WORK_ID" = #{params.workId}
+            AND "USER_ID" = #{params.userId}
+    </delete>
 
 </mapper>
